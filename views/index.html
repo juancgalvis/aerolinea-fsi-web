@@ -1,0 +1,17 @@
+<md-card>
+    <md-card-content>
+        <form ng-submit="login()">
+            <md-input-container class="md-icon-float" >
+                <label>Usuario</label>
+                <md-icon md-svg-src="img/icons/ic_person.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                <input ng-model="user.username" type="text" required="true">
+            </md-input-container>
+            <md-input-container class="md-icon-float" >
+                <label>Contraseña</label>
+                <md-icon md-svg-src="img/icons/ic_vpn_key.svg" class="password" style="width: 24px; height: 24px;"></md-icon>
+                <input ng-model="user.password" type="password" required="true">
+            </md-input-container>
+            <md-button class="md-raised md-primary">Iniciar Sesión</md-button>
+        </form>
+    </md-card-content>
+</md-card>

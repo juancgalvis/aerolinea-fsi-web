@@ -1,0 +1,78 @@
+<md-card>
+    <md-card-content>
+        <form ng-submit="submit()">
+            <p>Ciudad de Origen</p>
+            <md-autocomplete
+                md-selected-item="origin"
+                md-search-text="textOrigin"
+                md-items="airport in filter(textOrigin)"
+                md-search-text-change="searchTextChange"
+                md-selected-item-change="selectedItemChange"
+                md-item-text="airport.get('iata')+'-'+airport.get('city')"
+                md-min-length="0"
+                placeholder="Ciudad de Origen">
+                <md-item-template>
+                    <span class="item-title">
+                        <md-icon md-svg-src="img/icons/ic_pointer.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                        <span>{{airport.get("iata")+'-'+airport.get("city")}}</span>
+                    </span>
+                </md-item-template>
+                <md-not-found>
+                    No hay resultados para "{{textOrigin}}".
+                </md-not-found>
+            </md-autocomplete>
+
+            <br>
+            <p>Ciudad de Destino</p>
+
+            <md-autocomplete
+                md-selected-item="destination"
+                md-search-text="textDestination"
+                md-items="airport in filter(textDestination)"
+                md-search-text-change="searchTextChange"
+                md-selected-item-change="selectedItemChange"
+                md-item-text="airport.get('iata')+'-'+airport.get('city')"
+                md-min-length="0"
+                placeholder="Ciudad de Destino">
+                <md-item-template>
+                    <span class="item-title">
+                        <md-icon md-svg-src="img/icons/ic_pointer.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                        <span>{{airport.get("iata")+'-'+airport.get("city")}}</span>
+                    </span>
+                </md-item-template>
+                <md-not-found>
+                    No hay resultados para "{{textDestination}}".
+                </md-not-found>
+            </md-autocomplete>
+
+            <br>
+
+            <md-input-container class="md-icon-float" >
+                <label>Fecha</label>
+                <md-icon md-svg-src="img/icons/ic_calendar.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                <input ng-model="date" type="date" required="true">
+            </md-input-container>
+
+
+            <md-input-container class="md-icon-float" >
+                <label>Hora salida</label>
+                <md-icon md-svg-src="img/icons/ic_clock.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                <input ng-model="departureTime" type="time" required="true">
+            </md-input-container>
+
+            <md-input-container class="md-icon-float" >
+                <label>Hora llegada</label>
+                <md-icon md-svg-src="img/icons/ic_clock.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                <input ng-model="arrivalTime" type="time" required="true">
+            </md-input-container>
+
+            <md-input-container class="md-icon-float" >
+                <label>Precio</label>
+                <md-icon md-svg-src="img/icons/ic_price.svg" class="text" style="width: 24px; height: 24px;"></md-icon>
+                <input ng-model="price" type="number" required="true">
+            </md-input-container>
+
+            <md-button class="md-raised md-primary">Crear Vuelo</md-button>
+        </form>
+    </md-card-content>
+</md-card>

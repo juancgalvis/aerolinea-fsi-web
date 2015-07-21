@@ -1,0 +1,28 @@
+<md-card>
+	<md-card-content>
+		<div style='overflow-x:scroll;overflow-y:hidden;width:auto'>	
+			<table class="md-table">
+				<thead>
+					<tr class="md-table-headers-row">
+						<th class="md-table-header">Código</th>
+						<th class="md-table-header">Origen</th>
+						<th class="md-table-header">Destino</th>
+						<th class="md-table-header">Fecha Salida</th>
+						<th class="md-table-header">Fecha Llegada</th>
+						<th class="md-table-header">Avión</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="md-table-content-row" ng-repeat="flight in flights">
+						<td><div class="md-table-content" ng-class="contentsClass[header.contentField]">{{flight.id}}</div></td>
+						<td><div class="md-table-content" ng-class="contentsClass[header.contentField]">{{flight.get("origin").get("iata")+'-'+flight.get("origin").get("city")}}</div></td>
+						<td><div class="md-table-content" ng-class="contentsClass[header.contentField]">{{flight.get("destination").get("iata")+'-'+flight.get("destination").get("city")}}</div></td>
+						<td><div class="md-table-content" ng-class="contentsClass[header.contentField]">{{flight.get("departureDate") | date : 'yyyy-MM-dd HH:mm'}}</div></td>
+						<td><div class="md-table-content" ng-class="contentsClass[header.contentField]">{{flight.get("arrivalDate") | date : 'yyyy-MM-dd HH:mm'}}</div></td>
+						<td><div class="md-table-content" ng-class="contentsClass[header.contentField]">{{flight.get("airplane").get("make")+' '+flight.get("airplane").get("model")}}</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</md-card-content>
+</md-card>
