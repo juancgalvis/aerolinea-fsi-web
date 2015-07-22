@@ -316,6 +316,7 @@ app.controller("citiesController", function ($scope, $routeParams, $mdDialog) {
     $scope.selectedItemOneChange = function(airport) {
         if(airport == undefined){            
             airport = $scope.airports[0];
+            $scope.origin = airport;
         }        
         query.equalTo("destination", airport);
         query.count({
@@ -333,6 +334,7 @@ app.controller("citiesController", function ($scope, $routeParams, $mdDialog) {
     $scope.selectedItemTwoChange = function(airport) {
         if(airport == undefined){            
             airport = $scope.airports[1];
+            $scope.destination = airport;
         }
         query.equalTo("destination", airport);
         query.count({
@@ -350,6 +352,7 @@ app.controller("citiesController", function ($scope, $routeParams, $mdDialog) {
     $scope.selectedItemThreeChange = function(airport){       
         if(airport == undefined){            
             airport = $scope.airports[3];
+            $scope.itemThree = airport;
         }        
         query.equalTo("destination", airport);
         query.count({
@@ -373,70 +376,3 @@ app.controller("citiesController", function ($scope, $routeParams, $mdDialog) {
             );
     };
 });
-
-
-/*app.controller("reservationsController", function ($scope, $routeParams) {
-    $scope.medellin = [
-        {v: "Medellín"},
-        {v: 0}
-    ];
-    $scope.bogota = [
-        {v: "Bogotá"},
-        {v: 0}
-    ];
-    $scope.cali = [
-        {v: "Cali"},
-        {v: 0}
-    ];
-    var Flight = Parse.Object.extend("Flight");
-    var query = new Parse.Query(Flight);
-    var Airport = Parse.Object.extend("Airport");
-    var airport = new Airport();
-    airport.id = "MjhvzzkYlw";
-    query.equalTo("destination", airport);
-    var Reservation = Parse.Object.extend("Reservation");
-    var queryReservation = new Parse.Query(Reservation);
-    queryReservation.matchesQuery("flight", query);
-    queryReservation.count({
-        success: function(count) {
-            $scope.medellin[1].v = count;
-        },
-        error: function(error) {
-        }
-    });
-
-    airport.id = "MNJfB3b5Od";
-    query.equalTo("destination", airport);    
-    queryReservation.matchesQuery("flight", query);
-    queryReservation.count({
-        success: function(count) {
-            $scope.bogota[1].v = count;
-        },
-        error: function(error) {
-        }
-    });
-    airport.id = "3MVNYJD9r7";
-    query.equalTo("destination", airport);    
-    queryReservation.matchesQuery("flight", query);
-    queryReservation.count({
-        success: function(count) {
-            $scope.cali[1].v = count;
-        },
-        error: function(error) {
-        }
-    });
-    $scope.chartObject = {};
-    $scope.chartObject.data = {"cols": [
-        {id: "t", label: "Topping", type: "string"},
-        {id: "s", label: "Slices", type: "number"}
-    ], "rows": [
-        {c: $scope.medellin},
-        {c: $scope.bogota},
-        {c: $scope.cali}
-    ]};
-    $routeParams.chartType = 'PieChart';
-    $scope.chartObject.type = $routeParams.chartType;
-    $scope.chartObject.options = {
-        'title': 'Reservas a las ciudades principales'
-    };
-});*/
