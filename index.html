@@ -19,7 +19,7 @@
                         </div>
                         <md-fab-speed-dial md-direction="left" ng-class="md-scale">
                             <md-fab-trigger>
-                                <md-button aria-label="menu" class="md-fab md-default-theme" ng-show="visible()">
+                                <md-button aria-label="menu" class="md-fab md-default-theme">
                                     <md-icon md-svg-src="img/icons/ic_menu.svg"></md-icon>
                                     <md-tooltip>Menú</md-tooltip>
                                 </md-button>
@@ -32,6 +32,14 @@
                                 <md-button aria-label="Crear Vuelo" class="md-fab md-default md-mini" ng-click="addFlight()" ng-show="visible()">
                                     <md-icon md-svg-src="img/icons/ic_add_flight.svg"></md-icon>
                                     <md-tooltip>Crear Vuelo</md-tooltip>
+                                </md-button>
+                                <md-button aria-label="Ciudades más visitadas" class="md-fab md-default md-mini" ng-click="cities()">
+                                    <md-icon md-svg-src="img/icons/ic_chart.svg"></md-icon>
+                                    <md-tooltip>Ciudades más visitadas</md-tooltip>
+                                </md-button>
+                                <md-button aria-label="Iniciar Sesión" class="md-fab md-default md-mini" ng-show="!visible()" ng-click="login()">
+                                    <md-icon md-svg-src="img/icons/ic_login.svg"></md-icon>
+                                    <md-tooltip>Iniciar Sesión</md-tooltip>
                                 </md-button>
                                 <md-button aria-label="Cerrar Sesión" class="md-fab md-default md-mini" ng-click="logout()" ng-show="visible()">
                                     <md-icon md-svg-src="img/icons/ic_logout.svg"></md-icon>
@@ -50,6 +58,7 @@
         <script src="/js/angular-animate.min.js"></script>
         <script src="/js/angular-material.min.js"></script>
         <script src="/js/md-table.js"></script>
+        <script src="http://bouil.github.io/angular-google-chart/ng-google-chart.js"></script>
         <script src="/js/jquery.min.js"></script>
         <script src="/js/parse-angular.js"></script>
         <script src="/js/app.js"></script>

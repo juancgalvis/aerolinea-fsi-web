@@ -1,6 +1,6 @@
 Parse.initialize("0HCUh6LvopdYVtTKiNnWpvpISGzownaAgXW6rVIo", "LJJHYIxW1CeP7ujWkTObFjicnKKFhqnhqSGvr0u2");
 
-var app = angular.module('aerolineafsi', ['ngMaterial', 'ngRoute', 'parse-angular']);
+var app = angular.module('aerolineafsi', ['ngMaterial', 'ngRoute', 'parse-angular', 'googlechart']);
 
 app.config(function($routeProvider) {
     $routeProvider
@@ -22,6 +22,12 @@ app.config(function($routeProvider) {
         requireLogin : true,
         title : 'Crear Vuelo'
     })
+    .when('/cities', {
+        templateUrl : 'views/cities.html',
+        controller  : 'citiesController',
+        requireLogin : false,
+        title : 'Ciudades más visitadas'
+    })
     .otherwise({
         redirectTo:'/'
     });
@@ -35,7 +41,9 @@ app.run(['$location', '$rootScope', '$http', function($location, $rootScope, $ht
                 $location.path('/flights');
             }
         }else{
-            $location.path('/');
+            if($location.path() != '/cities'){
+                $location.path('/');
+            }
         }
     });
 }]);
@@ -45,13 +53,19 @@ app.controller('navbarController',['$scope', '$location', '$http', '$mdDialog', 
         return $location.path() == path;
     };
     $scope.visible = function(){
-        return $location.path() != '/';
+        return Parse.User.current() != null;
+    };
+    $scope.login = function(){
+        return $location.path('/');
     };
     $scope.flights = function(){
         return $location.path('/flights');
     };
     $scope.addFlight = function(){
         return $location.path('/addFlight');
+    };    
+    $scope.cities = function(){
+        return $location.path('/cities');
     };
     $scope.logout = function(){
         Parse.User.logOut();
@@ -214,3 +228,215 @@ app.controller('addFlightController', ['$http', '$scope', '$mdDialog', '$locatio
             );
     };
 }]);
+
+app.controller("citiesController", function ($scope, $routeParams, $mdDialog) {
+    var airport = Parse.Object.extend("Airport");
+    var airportQuery = new Parse.Query(airport);
+    airportQuery.find({
+        success: function(results) {
+            $scope.airports = [];
+            for(var i = 0; i < results.length; i++){
+                $scope.airports.push(results[i]);
+            }
+        },
+        error: function(error) {
+            $scope.showAlert(error.message);
+        }
+    });    
+    $scope.one = [
+    {v: "Rio Negro, Colombia"},
+    {v: 0}
+    ];
+    $scope.two = [
+    {v: "Bogotá, Colombia"},
+    {v: 0}
+    ];
+    $scope.three = [
+    {v: "Cali, Colombia"},
+    {v: 0}
+    ];
+    var Flight = Parse.Object.extend("Flight");
+    var query = new Parse.Query(Flight);
+    var Airport = Parse.Object.extend("Airport");
+    var airport = new Airport();
+    airport.id = "MjhvzzkYlw";
+    query.equalTo("destination", airport);
+    query.count({
+        success: function(count) {
+            $scope.one[1].v = count;
+        },
+        error: function(error) {
+        }
+    });
+    airport.id = "MNJfB3b5Od";
+    query.equalTo("destination", airport);
+    query.count({
+        success: function(count) {
+            $scope.two[1].v = count;
+        },
+        error: function(error) {
+        }
+    });
+    airport.id = "3MVNYJD9r7";
+    query.equalTo("destination", airport);
+    query.count({
+        success: function(count) {
+            $scope.three[1].v = count;
+        },
+        error: function(error) {
+        }
+    });
+    $scope.chartObject = {};
+    $scope.chartObject.data = {"cols": [
+    {id: "t", label: "Topping", type: "string"},
+    {id: "s", label: "Slices", type: "number"}
+    ], "rows": [
+    {c: $scope.one},
+    {c: $scope.two},
+    {c: $scope.three}
+    ]};
+    $routeParams.chartType = 'PieChart';
+    $scope.chartObject.type = $routeParams.chartType;
+    $scope.chartObject.options = {
+        'title': 'Vuelos hacia las ciudades principales'
+    };
+
+    $scope.filter = function(text){
+        var results = text ? $scope.airports.filter( filterText(text) ) : $scope.airports, deferred;
+        return results;
+    };
+    function filterText(query) {
+        var lowercaseQuery = angular.lowercase(query);
+        return function filterFn(airport) {
+            var lower = angular.lowercase(airport.get("iata"))+'-'+angular.lowercase(airport.get("city"));
+            return (lower.indexOf(lowercaseQuery) !== -1);
+        };
+    };
+    $scope.searchTextChange = function(text) {};
+    $scope.selectedItemOneChange = function(airport) {
+        if(airport == undefined){            
+            airport = $scope.airports[0];
+        }        
+        query.equalTo("destination", airport);
+        query.count({
+            success: function(count) {
+                if(count == 0){
+                    $scope.showAlert('La ciudad: '+airport.get("city")+' no tiene vuelos');
+                }
+                $scope.one[0].v = airport.get("city");
+                $scope.one[1].v = count;
+            },
+            error: function(error) {
+            }
+        });
+    };
+    $scope.selectedItemTwoChange = function(airport) {
+        if(airport == undefined){            
+            airport = $scope.airports[1];
+        }
+        query.equalTo("destination", airport);
+        query.count({
+            success: function(count) {
+                if(count == 0){
+                    $scope.showAlert('La ciudad: '+airport.get("city")+' no tiene vuelos');
+                }
+                $scope.two[0].v = airport.get("city");
+                $scope.two[1].v = count;
+            },
+            error: function(error) {
+            }
+        });
+    };
+    $scope.selectedItemThreeChange = function(airport){       
+        if(airport == undefined){            
+            airport = $scope.airports[3];
+        }        
+        query.equalTo("destination", airport);
+        query.count({
+            success: function(count) {
+                if(count == 0){
+                    $scope.showAlert('La ciudad: '+airport.get("city")+' no tiene vuelos');
+                }
+                $scope.three[0].v = airport.get("city");
+                $scope.three[1].v = count;
+            },
+            error: function(error) {
+            }
+        });
+    };    
+    $scope.showAlert = function(message) {
+        $mdDialog.show(
+            $mdDialog.alert()
+            .parent(angular.element(document.body))
+            .content(message)
+            .ok('Cerrar')
+            );
+    };
+});
+
+
+/*app.controller("reservationsController", function ($scope, $routeParams) {
+    $scope.medellin = [
+        {v: "Medellín"},
+        {v: 0}
+    ];
+    $scope.bogota = [
+        {v: "Bogotá"},
+        {v: 0}
+    ];
+    $scope.cali = [
+        {v: "Cali"},
+        {v: 0}
+    ];
+    var Flight = Parse.Object.extend("Flight");
+    var query = new Parse.Query(Flight);
+    var Airport = Parse.Object.extend("Airport");
+    var airport = new Airport();
+    airport.id = "MjhvzzkYlw";
+    query.equalTo("destination", airport);
+    var Reservation = Parse.Object.extend("Reservation");
+    var queryReservation = new Parse.Query(Reservation);
+    queryReservation.matchesQuery("flight", query);
+    queryReservation.count({
+        success: function(count) {
+            $scope.medellin[1].v = count;
+        },
+        error: function(error) {
+        }
+    });
+
+    airport.id = "MNJfB3b5Od";
+    query.equalTo("destination", airport);    
+    queryReservation.matchesQuery("flight", query);
+    queryReservation.count({
+        success: function(count) {
+            $scope.bogota[1].v = count;
+        },
+        error: function(error) {
+        }
+    });
+    airport.id = "3MVNYJD9r7";
+    query.equalTo("destination", airport);    
+    queryReservation.matchesQuery("flight", query);
+    queryReservation.count({
+        success: function(count) {
+            $scope.cali[1].v = count;
+        },
+        error: function(error) {
+        }
+    });
+    $scope.chartObject = {};
+    $scope.chartObject.data = {"cols": [
+        {id: "t", label: "Topping", type: "string"},
+        {id: "s", label: "Slices", type: "number"}
+    ], "rows": [
+        {c: $scope.medellin},
+        {c: $scope.bogota},
+        {c: $scope.cali}
+    ]};
+    $routeParams.chartType = 'PieChart';
+    $scope.chartObject.type = $routeParams.chartType;
+    $scope.chartObject.options = {
+        'title': 'Reservas a las ciudades principales'
+    };
+});*/
